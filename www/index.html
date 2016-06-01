@@ -89,18 +89,29 @@
 
             db.transaction(function (t) {
                 t.executeSql(q, null, function (t, data) {
-                    var html = "<table><tr><td>ID</td><td>Name</td><td>idade</td></tr>";
+                    var html = "<table><tr><td>ID</td><td>Name</td><td>idade</td><td>Excluir</td></tr>";
                     for (var i = 0; i < data.rows.length; i++) {
                           html += "<tr><td>" + 
                           data.rows.item(i).id + "</td><td>" +
                           data.rows.item(i).name + "</td><td>" +
-                          data.rows.item(i).age + "</td></tr>";
+                          data.rows.item(i).age + "</td>"+
+                          "<td><button onclick='excluir("+data.rows.item(i).id+
+                         ");' >Excluir</button></td></tr>";
                     }
                     html += "</table>";
                     var el = document.getElementById("main");
                     el.innerHTML = html;
                 });
             });
+        }
+     
+        // excluir
+        function excluir(id){
+            db.transaction(function (t) { 
+                t.executeSql("DELETE FROM myTable WHERE id = "+id+" ");
+                $.afui.popup("excluido com sucesso");
+            });
+            selRows();
         }
 
        selRows();
@@ -143,7 +154,9 @@
             </div>
 
             <div class="panel" data-title="Database" id="tab3">
-                <div id="main"></div>
+                <div id="main">
+                   
+                </div>
             </div>
 
             
@@ -153,7 +166,7 @@
         <footer>
             <a href="#tab1" class="icon home" onclick="$.afui.clearHistory()">Home</a>
             <a href="#tab2" class="icon user" onclick="$.afui.clearHistory()">Inserir</a>
-            <a href="#tab3" class="icon database" onclick="$.afui.clearHistory()">Messages</a>
+            <a href="#tab3" class="icon database" onclick="$.afui.clearHistory()">Listar</a>
           
         </footer>
     </div>
